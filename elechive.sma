@@ -11,10 +11,12 @@
 *
 * Changelog		v1.0
 *			-> Initial Release
+*			v1.1
+*			-> Removed the need for fakemeta (thanks Morpheus!)
 *
 * CVARs: 		amx_elechive (default:1) <- Enable or disable ElecHive
 *
-* Defines:		HELPER (default 1) <- If you are using -mE-'s Helper, change this to 1, else 0.
+* Defines:		HELPER (default:1) <- If you are using -mE-'s Helper, change this to 1, else 0.
 *
 *
 * Upcoming Releases:	-> To add a timer for the electrification
@@ -27,7 +29,6 @@
 #include <amxmisc>
 #include <ns>
 #include <engine>
-#include <fakemeta>
 
 #if HELPER == 1
 #tryinclude <helper>
@@ -36,7 +37,7 @@
 #endif
 #endif
 
-new plugin_version[] = "1.0"
+new plugin_version[] = "1.1"
 
 public plugin_init() {
 	register_cvar("KrX_elechive",plugin_version,FCVAR_SERVER)
@@ -63,13 +64,12 @@ public NewCountdown()
 	if( enabled == 1 )
 	{
 		client_print(0, print_chat, "[ElecHive by KrX] The hive is now electrified!")
-		set_rendering(hive, kRenderFxGlowShell, 255, 255, 255, kRenderNormal, 16)
-		set_pev(hive, pev_iuser4, pev(hive, pev_iuser4)|MASK_ELECTRICITY);
+		ns_set_mask(hive, MASK_ELECTRICITY, 1)
 	}
 	else
 	{
 		client_print(0, print_chat, "[ElecHive by KrX] The hive will not be electrified for this round.")
-		set_rendering(hive)
+		ns_set_mask(hive, MASK_ELECTRICITY, 0)
 	}
 }
 
